@@ -40,48 +40,56 @@ def check_api_keys():
 # Inicializar agentes
 @st.cache_resource
 def initialize_agents():
-    """Inicializa os agentes da equipe multi-idioma"""
+    """Inicializa os agentes da equipe multi-idioma com configurações otimizadas"""
     try:
+        # Agente Inglês com contexto específico
         english_agent = Agent(
             name="English Agent",
-            role="You only answer in English",
+            role="You are a professional English language assistant. You ONLY respond in English. You provide clear, helpful, and accurate responses. If the user asks in any other language, politely ask them to use English.",
             model=OpenAIChat(id='gpt-4o-mini'),
         )
         
+        # Agente Chinês com contexto específico
         chinese_agent = Agent(
             name="Chinese Agent",
-            role="You only answer in Chinese",
+            role="你是专业的中文语言助手。你只用中文回答。你提供清晰、有用和准确的回答。如果用户用其他语言提问，请礼貌地请他们使用中文。",
             model=OpenAIChat(id='gpt-4o-mini'),
         )
         
+        # Agente Francês com contexto específico
         french_agent = Agent(
             name="French Agent",
-            role="You can only answer in French",
+            role="Vous êtes un assistant linguistique français professionnel. Vous répondez UNIQUEMENT en français. Vous fournissez des réponses claires, utiles et précises. Si l'utilisateur pose une question dans une autre langue, demandez-lui poliment d'utiliser le français.",
             model=OpenAIChat(id='gpt-4o-mini'),
         )
         
+        # Agente Português com contexto específico
         portuguese_agent = Agent(
             name="Portuguese Agent",
-            role="You can only answer in Portuguese",
+            role="Você é um assistente linguístico português profissional. Você responde APENAS em português. Você fornece respostas claras, úteis e precisas. Se o usuário fizer uma pergunta em outro idioma, peça educadamente que use português.",
             model=OpenAIChat(id='gpt-4o-mini'),
         )
         
+        # Equipe com modo de roteamento otimizado
         multi_language_team = Team(
             name="Multi Language Team",
-            mode="sequential",
+            mode="route",  # Usar modo de roteamento em vez de sequencial
             model=OpenAIChat(id='gpt-4o-mini'),
             members=[english_agent, chinese_agent, french_agent, portuguese_agent],
             show_tool_calls=True,
             markdown=True,
-            description="You are a language router that directs questions to the appropriate language agent.",
+            description="Sistema inteligente de roteamento de idiomas para Assessment DISC",
             instructions=[
-                "First, identify the language of the user's question.",
-                "If the question is in English, route it to the English Agent.",
-                "If the question is in Chinese, route it to the Chinese Agent.", 
-                "If the question is in French, route it to the French Agent.",
-                "If the question is in Portuguese, route it to the Portuguese Agent.",
-                "If the question is in any other language, respond in English: 'I can only answer in English, Chinese, French, and Portuguese. Please ask your question in one of these languages.'",
-                "Always provide a helpful response in the appropriate language.",
+                "ANÁLISE DE IDIOMA: Primeiro, analise cuidadosamente o idioma da pergunta do usuário.",
+                "IDENTIFICAÇÃO: Identifique se é Inglês, Chinês, Francês ou Português.",
+                "ROTEAMENTO ESPECÍFICO:",
+                "- Se for INGLÊS: direcione para English Agent",
+                "- Se for CHINÊS: direcione para Chinese Agent", 
+                "- Se for FRANCÊS: direcione para French Agent",
+                "- Se for PORTUGUÊS: direcione para Portuguese Agent",
+                "RESPOSTA PADRÃO: Para outros idiomas, responda em inglês: 'I can only answer in English, Chinese, French, and Portuguese. Please ask your question in one of these languages.'",
+                "VALIDAÇÃO: Sempre confirme o idioma antes de rotear para o agente apropriado.",
+                "CONTEXTO: Mantenha o contexto da pergunta original ao rotear.",
             ],
             show_members_responses=True,
         )
@@ -203,6 +211,7 @@ def main():
     - **Debug**: {debug}
     - **Modelo**: GPT-4o-mini (OpenAI)
     - **Versão**: Assessment DISC v1.0
+    - **Modo**: Roteamento Inteligente
     """)
 
 if __name__ == "__main__":
