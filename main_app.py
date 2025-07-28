@@ -134,11 +134,11 @@ def main():
             with st.spinner("🔄 Processando..."):
                 try:
                     # Obter resposta da equipe
-                    response = team.get_response(user_input, stream=True)
+                    response = team.print_response(user_input, stream=True)
                     
                     # Exibir resposta
                     st.markdown("### 📝 Resposta:")
-                    st.markdown(response.content)
+                    st.markdown(response)
                     
                 except Exception as e:
                     st.error(f"❌ Erro ao processar mensagem: {str(e)}")
