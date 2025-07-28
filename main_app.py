@@ -62,18 +62,19 @@ def initialize_agents():
         
         multi_language_team = Team(
             name="Multi Language Team",
-            mode="route",
+            mode="sequential",
             model=OpenAIChat(id='gpt-4o-mini'),
             members=[english_agent, chinese_agent, french_agent],
             show_tool_calls=True,
             markdown=True,
             description="You are a language router that directs questions to the appropriate language agent.",
             instructions=[
-                "Identify the language of the user's question and direct it to the appropriate language agent.",
-                "If the user asks in a language whose agent is not a team member, respond in English with:",
-                "'I can only answer in the following languages: English, Chinese, French. Please ask your question in one of these languages.'",
-                "Always check the language of the user's input before routing to an agent.",
-                "For unsupported languages like Italian, respond in English with the above message.",
+                "First, identify the language of the user's question.",
+                "If the question is in English, route it to the English Agent.",
+                "If the question is in Chinese, route it to the Chinese Agent.", 
+                "If the question is in French, route it to the French Agent.",
+                "If the question is in any other language, respond in English: 'I can only answer in English, Chinese, and French. Please ask your question in one of these languages.'",
+                "Always provide a helpful response in the appropriate language.",
             ],
             show_members_responses=True,
         )
@@ -134,11 +135,11 @@ def main():
             with st.spinner("🔄 Processando..."):
                 try:
                     # Obter resposta da equipe
-                    response = team.print_response(user_input, stream=True)
+                    response = team.run(user_input, stream=False)
                     
                     # Exibir resposta
                     st.markdown("### 📝 Resposta:")
-                    st.markdown(response)
+                    st.markdown(response.content)
                     
                 except Exception as e:
                     st.error(f"❌ Erro ao processar mensagem: {str(e)}")
