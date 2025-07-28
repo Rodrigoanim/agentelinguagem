@@ -60,11 +60,17 @@ def initialize_agents():
             model=OpenAIChat(id='gpt-4o-mini'),
         )
         
+        portuguese_agent = Agent(
+            name="Portuguese Agent",
+            role="You can only answer in Portuguese",
+            model=OpenAIChat(id='gpt-4o-mini'),
+        )
+        
         multi_language_team = Team(
             name="Multi Language Team",
             mode="sequential",
             model=OpenAIChat(id='gpt-4o-mini'),
-            members=[english_agent, chinese_agent, french_agent],
+            members=[english_agent, chinese_agent, french_agent, portuguese_agent],
             show_tool_calls=True,
             markdown=True,
             description="You are a language router that directs questions to the appropriate language agent.",
@@ -73,7 +79,8 @@ def initialize_agents():
                 "If the question is in English, route it to the English Agent.",
                 "If the question is in Chinese, route it to the Chinese Agent.", 
                 "If the question is in French, route it to the French Agent.",
-                "If the question is in any other language, respond in English: 'I can only answer in English, Chinese, and French. Please ask your question in one of these languages.'",
+                "If the question is in Portuguese, route it to the Portuguese Agent.",
+                "If the question is in any other language, respond in English: 'I can only answer in English, Chinese, French, and Portuguese. Please ask your question in one of these languages.'",
                 "Always provide a helpful response in the appropriate language.",
             ],
             show_members_responses=True,
@@ -124,9 +131,9 @@ def main():
     
     # Área de entrada
     user_input = st.text_area(
-        "Digite sua mensagem (suporta Inglês, Chinês e Francês):",
+        "Digite sua mensagem (suporta Inglês, Chinês, Francês e Português):",
         height=100,
-        placeholder="Ex: How are you? / Comment allez-vous? / 你好吗？"
+        placeholder="Ex: How are you? / Comment allez-vous? / 你好吗？ / Como você está?"
     )
     
     # Botão de envio
@@ -150,7 +157,7 @@ def main():
     st.markdown("---")
     st.markdown("### 🌐 Idiomas Suportados")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.markdown("""
@@ -173,6 +180,14 @@ def main():
         <div style='background-color:#f0f0f0;padding:10px;border-radius:5px;text-align:center;'>
             <h4>🇫🇷 Francês</h4>
             <p>Respostas em francês</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div style='background-color:#f0f0f0;padding:10px;border-radius:5px;text-align:center;'>
+            <h4>🇧🇷 Português</h4>
+            <p>Respostas em português</p>
         </div>
         """, unsafe_allow_html=True)
     
